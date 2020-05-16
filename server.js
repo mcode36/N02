@@ -1,5 +1,11 @@
 "use strict";
 
+/*
+FCC Advanced Node and Express, project #1 User authentication
+
+Project Page: https://glitch.com/~fate-nine-papyrus
+Live App: https://fate-nine-papyrus.glitch.me
+*/
 const express = require("express");
 const bodyParser = require("body-parser");
 const fccTesting = require("./freeCodeCamp/fcctesting.js");
