@@ -76,6 +76,13 @@ client.connect((err, client) => {
     })
   );
 
+  function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect("/");
+  }
+
   app.get("/insertone", function(req, res) {
     // Insert a single document
     db.collection("users").insertOne({ username: "Santa" }, function(err, r) {
@@ -97,7 +104,18 @@ client.connect((err, client) => {
       showRegistration: true
     });
   });
-});
+
+  app.route("/login").post(passport.authenticate("local", { failureRedirect: "/" }), (req, res) => {
+        res.redirect("/profile");
+  });
+  
+  app.route("/profile").get(ensureAuthenticated, (req, res) => {
+        res.render(process.cwd() + "/views/pug/profile", {
+          username: req.user.username
+        });
+  });
+  
+}); // end_of client.connect
 
 app.get("/test", function(req, res) {
   res.send({ route: "test" });
