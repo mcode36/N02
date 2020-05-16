@@ -2,12 +2,9 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const session = require("express-session");
+const fccTesting = require("./freeCodeCamp/fcctesting.js");
 const passport = require("passport");
 const MongoClient = require("mongodb").MongoClient;
-
-
-const fccTesting = require("./freeCodeCamp/fcctesting.js");
 const routes = require('./routes.js');
 const auth = require('./auth.js');
 
@@ -21,16 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 //app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set("view engine", "pug");
-
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
 
 const client = new MongoClient(process.env.DATABASE, {
   useUnifiedTopology: true,
@@ -49,18 +36,11 @@ client.connect((err, client) => {
   auth(app, db);
   routes(app, db);
 
-  app.use((req, res, next) => {
-    res
-      .status(404)
-      .type("text")
-      .send("Not Found");
-  });
+  
   // spacer
 }); // end_of client.connect
 
-app.get("/test", function(req, res) {
-  res.send({ route: "test" });
-});
+
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Listening on port " + process.env.PORT);

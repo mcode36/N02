@@ -82,4 +82,12 @@ module.exports = function (app, db) {
     req.logout();
     res.redirect("/");
   });
+  
+  app.use((req, res, next) => {
+    res
+      .status(404)
+      .type("text")
+      .send("Not Found");
+  });
+  
 }

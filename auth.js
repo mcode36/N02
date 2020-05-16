@@ -2,10 +2,19 @@ const passport = require("passport");
 const bcrypt = require("bcrypt");
 const LocalStrategy = require("passport-local");
 const ObjectID = require("mongodb").ObjectID;
+const session = require("express-session");
 
-module.exports = function (app, db) {
+module.exports = function(app, db) {
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: true,
+      saveUninitialized: true
+    })
+  );
+  app.use(passport.initialize());
+  app.use(passport.session());
 
-  // start to add things down below
   passport.serializeUser((user, done) => {
     done(null, user._id);
   });
@@ -32,14 +41,11 @@ module.exports = function (app, db) {
         //if (password !== user.password) {
         //  return done(null, false);
         //}
-        if (!bcrypt.compareSync(password, user.password)) { 
-          return done(null, false); 
+        if (!bcrypt.compareSync(password, user.password)) {
+          return done(null, false);
         }
         return done(null, user);
       });
     })
   );
-
-  
-  
-}
+};
