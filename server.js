@@ -4,7 +4,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fccTesting = require("./freeCodeCamp/fcctesting.js");
 const passport = require("passport");
-const MongoClient = require("mongodb").MongoClient;
+const session = require("express-session");
+const mongo = require("mongodb").MongoClient;
 const routes = require('./routes.js');
 const auth = require('./auth.js');
 
@@ -19,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "pug");
 
-const client = new MongoClient(process.env.DATABASE, {
+const client = new mongo(process.env.DATABASE, {
   useUnifiedTopology: true,
   useNewUrlParser: true
 });
