@@ -2,13 +2,15 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const fccTesting = require("./freeCodeCamp/fcctesting.js");
 const session = require("express-session");
 const passport = require("passport");
 const MongoClient = require("mongodb").MongoClient;
 const ObjectID = require("mongodb").ObjectID;
 const LocalStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
+const fccTesting = require("./freeCodeCamp/fcctesting.js");
+const routes = require('./routes.js');
+const auth = require('./auth.js');
 
 const app = express();
 
@@ -44,6 +46,9 @@ client.connect((err, client) => {
   }
 
   const db = client.db("userAuth");
+  
+  auth(app, db);
+  routes(app, db);
 
   // start to add things down below
   passport.serializeUser((user, done) => {
