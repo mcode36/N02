@@ -8,6 +8,7 @@ const passport = require("passport");
 const MongoClient = require("mongodb").MongoClient;
 const ObjectID = require("mongodb").ObjectID;
 const LocalStrategy = require("passport-local");
+const bcrypt = require("bcrypt");
 
 const app = express();
 
@@ -68,8 +69,11 @@ client.connect((err, client) => {
         if (!user) {
           return done(null, false);
         }
-        if (password !== user.password) {
-          return done(null, false);
+        //if (password !== user.password) {
+        //  return done(null, false);
+        //}
+        if (!bcrypt.compareSync(password, user.password)) { 
+          return done(null, false); 
         }
         return done(null, user);
       });
@@ -131,8 +135,9 @@ client.connect((err, client) => {
         } else if (user) {
           res.redirect("/");
         } else {
+          var hash = bcrypt.hashSync(req.body.password, 12);
           db.collection("users").insertOne(
-            { username: req.body.username, password: req.body.password },
+            { username: req.body.username, password: hash },
             (err, doc) => {
               if (err) {
                 res.redirect("/");
