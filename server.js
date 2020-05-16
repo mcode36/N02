@@ -45,7 +45,7 @@ client.connect((err, client) => {
   const db = client.db("userAuth");
 
   app.get("/insertone", function(req, res) {
-    // Insert a single document
+    // Insert a single document 
     db.collection("users").insertOne({ username: "Santa" }, function(err, r) {
       if (err) {
         console.log("error inserting new record.");
